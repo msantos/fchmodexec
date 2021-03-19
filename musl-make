@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+export CC="musl-gcc -static -Os"
+export FCHMODEXEC_CFLAGS="-no-pie"
+exec make $@
