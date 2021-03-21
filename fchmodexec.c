@@ -24,7 +24,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#define FCHMODEXEC_VERSION "0.1.1"
+#define FCHMODEXEC_VERSION "0.2.0"
 
 static void usage(void);
 
@@ -70,8 +70,11 @@ int main(int argc, char *argv[]) {
     if (endptr == argv[i] || *endptr != '\0' || fd < 0)
       usage();
 
+    if (fcntl(fd, F_GETFD, 0) == -1)
+      continue;
+
     if (fchmod(fd, mode) == -1) {
-      warn("fchmod(%d, %o)", fd, mode);
+      err(111, "fchmod(%d, %o)", fd, mode);
     }
   }
 
