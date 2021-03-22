@@ -24,17 +24,15 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#define FCHMODEXEC_VERSION "0.2.0"
+#define FCHMODEXEC_VERSION "0.3.0"
 
 static void usage(void);
+static int fdloop(int *argc, char *argv[], mode_t mode, int apply);
 
 extern char *__progname;
 
 int main(int argc, char *argv[]) {
   mode_t mode;
-  int i;
-  int fd;
-  int found = 0;
   char *endptr;
 
   /* 0: progname
@@ -55,7 +53,24 @@ int main(int argc, char *argv[]) {
   if (endptr == argv[1] || *endptr != '\0')
     usage();
 
-  for (i = 2; i < argc; i++) {
+  if (fdloop(&argc, argv, mode, 0) == -1)
+    usage();
+
+  if (fdloop(&argc, argv, mode, 1) == -1)
+    exit(111);
+
+  (void)execvp(argv[argc], argv + argc);
+
+  err(127, "%s", argv[argc]);
+}
+
+static int fdloop(int *argc, char *argv[], mode_t mode, int apply) {
+  int i;
+  int fd;
+  int found = 0;
+  char *endptr;
+
+  for (i = 2; i < *argc; i++) {
     if (!strcmp(argv[i], "--")) {
       found = 1;
       break;
@@ -64,29 +79,38 @@ int main(int argc, char *argv[]) {
     errno = 0;
     fd = (mode_t)strtol(argv[i], &endptr, 10);
 
-    if (errno != 0)
-      err(111, "strtol: %s", argv[i]);
+    if (errno != 0) {
+      warn("strtol: %s", argv[i]);
+      return -1;
+    }
 
-    if (endptr == argv[i] || *endptr != '\0' || fd < 0)
-      usage();
+    if (endptr == argv[i] || *endptr != '\0' || fd < 0) {
+      warnx("invalid argument: %s", argv[i]);
+      return -1;
+    }
+
+    if (!apply)
+      continue;
 
     if (fcntl(fd, F_GETFD, 0) == -1)
       continue;
 
     if (fchmod(fd, mode) == -1) {
-      err(111, "fchmod(%d, %o)", fd, mode);
+      warn("fchmod(%d, %o)", fd, mode);
+      return -1;
     }
   }
 
   i++;
 
-  if (found == 0 || argc == i) {
-    usage();
+  if (found == 0 || *argc == i) {
+    return -1;
   }
 
-  (void)execvp(argv[i], argv + i);
+  if (apply)
+    *argc = i;
 
-  err(127, "%s", argv[i]);
+  return 0;
 }
 
 static void usage(void) {
