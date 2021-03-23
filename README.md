@@ -13,7 +13,7 @@ a program.
 
 # EXAMPLES
 
-    $ umask 077; ( ./fchmodexec 644 1 -- ls -al out) > out
+    $ umask 077; (fchmodexec 644 1 -- ls -al out) > out
     $ cat out
     -rw-r--r-- 1 msantos msantos 0 Mar 18 07:32 out
     $ ls -al out

@@ -13,7 +13,9 @@ LDFLAGS ?= -Wl,-z,relro,-z,now -Wl,-z,noexecstack
 CFLAGS += $(FCHMODEXEC_CFLAGS)
 LDFLAGS += $(FCHMODEXEC_LDFLAGS)
 
-all:
+all: $(PROG)
+
+$(PROG):
 	$(CC) $(CFLAGS) -o $(PROG) $(SRCS) $(LDFLAGS)
 
 clean:
