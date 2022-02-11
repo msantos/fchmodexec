@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, Michael Santos <michael.santos@gmail.com>
+ * Copyright (c) 2021-2022, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -18,15 +18,16 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdnoreturn.h>
 #include <sys/resource.h>
 #include <unistd.h>
 
 #include <string.h>
 #include <sys/stat.h>
 
-#define FCHMODEXEC_VERSION "0.3.0"
+#define FCHMODEXEC_VERSION "0.3.1"
 
-static void usage(void);
+static noreturn void usage(void);
 static int fdloop(int *argc, char *argv[], mode_t mode, int apply);
 
 extern char *__progname;
@@ -77,7 +78,7 @@ static int fdloop(int *argc, char *argv[], mode_t mode, int apply) {
     }
 
     errno = 0;
-    fd = (mode_t)strtol(argv[i], &endptr, 10);
+    fd = (int)strtol(argv[i], &endptr, 10);
 
     if (errno != 0) {
       warn("strtol: %s", argv[i]);
@@ -113,7 +114,7 @@ static int fdloop(int *argc, char *argv[], mode_t mode, int apply) {
   return 0;
 }
 
-static void usage(void) {
+static noreturn void usage(void) {
   (void)fprintf(stderr,
                 "%s %s\n"
                 "usage: %s <mode> <fd> <...> -- <cmd> <...>\n",
