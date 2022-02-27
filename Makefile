@@ -13,10 +13,12 @@ LDFLAGS ?= -Wl,-z,relro,-z,now -Wl,-z,noexecstack
 CFLAGS += $(FCHMODEXEC_CFLAGS)
 LDFLAGS += $(FCHMODEXEC_LDFLAGS)
 
-all: $(PROG)
-
 $(PROG):
 	$(CC) $(CFLAGS) -o $(PROG) $(SRCS) $(LDFLAGS)
+
+all: $(PROG) lib
+
+lib:
 	$(CC) -Wall -Wextra -pedantic -D_GNU_SOURCE -nostartfiles -shared -fpic -fPIC \
     -Wconversion -Wshadow \
     -Wpointer-arith -Wcast-qual \
@@ -25,7 +27,7 @@ $(PROG):
     -Wl,-z,relro,-z,now -Wl,-z,noexecstack
 
 clean:
-	-@rm $(PROG)
+	-@rm $(PROG) libdisablefchmod.so
 
 test: $(PROG)
 	@PATH=.:$(PATH) bats test

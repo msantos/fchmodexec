@@ -41,6 +41,9 @@ None.
 
     make
 
+    # also build libdisablefchmod
+    make all
+
     # statically linked executable
     ./musl-make
 
