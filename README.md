@@ -13,25 +13,30 @@ a command
 any file descriptors inherited from the parent process before executing
 a program.
 
-libdisablefchmod: Disable fchmod(2) of inherited stdio file descriptors.
+libdisablefchmod: Disables calls fchmod(2) to stdin and stdout by
+dynamically linked executables.
 
 # EXAMPLES
 
 ## fchmodexec
 
-    $ umask 077; (fchmodexec 644 1 -- ls -al out) > out
-    $ cat out
-    -rw-r--r-- 1 msantos msantos 0 Mar 18 07:32 out
-    $ ls -al out
-    -rw-r--r-- 1 msantos msantos 48 Mar 18 07:32 out
+```
+$ umask 077; (fchmodexec 644 1 -- ls -al out) > out
+$ cat out
+-rw-r--r-- 1 msantos msantos 0 Mar 18 07:32 out
+$ ls -al out
+-rw-r--r-- 1 msantos msantos 48 Mar 18 07:32 out
+```
 
 ## libdisablefchmod
 
-    $ umask 022; (LD_PRELOAD=libdisablefchmod.so fchmodexec 111 1 -- ls -al out) > out
-    $ cat out
-    -rw-r--r-- 1 msantos msantos 0 Mar 18 07:32 out
-    $ ls -al out
-    -rw-r--r-- 1 msantos msantos 48 Mar 18 07:32 out
+```
+$ umask 022; (LD_PRELOAD=libdisablefchmod.so fchmodexec 111 1 -- ls -al out) > out
+$ cat out
+-rw-r--r-- 1 msantos msantos 0 Mar 18 07:32 out
+$ ls -al out
+-rw-r--r-- 1 msantos msantos 48 Mar 18 07:32 out
+```
 
 # OPTIONS
 
@@ -39,14 +44,16 @@ None.
 
 # BUILDING
 
-    make
+```
+make
 
-    # also build libdisablefchmod
-    make all
+# also build libdisablefchmod
+make all
 
-    # statically linked executable
-    ./musl-make
+# statically linked executable
+./musl-make
+```
 
 # SEE ALSO
 
-_exec(3)_, _fchmod_(2)
+*exec(3)*, *fchmod*(2)
