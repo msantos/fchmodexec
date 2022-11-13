@@ -1,5 +1,4 @@
-/*
- * Copyright (c) 2021-2022, Michael Santos <michael.santos@gmail.com>
+/* Copyright (c) 2021-2022, Michael Santos <michael.santos@gmail.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -25,7 +24,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#define FCHMODEXEC_VERSION "0.3.1"
+#define FCHMODEXEC_VERSION "0.3.2"
 
 static noreturn void usage(void);
 static int fdloop(int *argc, char *argv[], mode_t mode, int apply);
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]) {
 
   (void)execvp(argv[argc], argv + argc);
 
-  err(127, "%s", argv[argc]);
+  err(errno == ENOENT ? 127 : 126, "%s", argv[argc]);
 }
 
 static int fdloop(int *argc, char *argv[], mode_t mode, int apply) {
@@ -114,10 +113,10 @@ static int fdloop(int *argc, char *argv[], mode_t mode, int apply) {
   return 0;
 }
 
-static noreturn void usage(void) {
+static void usage(void) {
   (void)fprintf(stderr,
                 "%s %s\n"
                 "usage: %s <mode> <fd> <...> -- <cmd> <...>\n",
                 __progname, FCHMODEXEC_VERSION, __progname);
-  exit(1);
+  exit(2);
 }
