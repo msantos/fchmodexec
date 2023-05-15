@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2021-2022 Michael Santos
+ * Copyright (c) 2021-2023 Michael Santos
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 #include <sys/stat.h>
 
 void _init(void);
-int (*sys_fchmod)(int fd, mode_t mode);
+static int (*sys_fchmod)(int fd, mode_t mode);
 #pragma GCC diagnostic ignored "-Wpedantic"
 int fchmod(int fd, mode_t mode);
 #pragma GCC diagnostic warning "-Wpedantic"
