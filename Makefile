@@ -30,4 +30,4 @@ clean:
 	-@rm $(PROG) libdisablefchmod.so
 
 test: $(PROG)
-	@PATH=.:$(PATH) bats test
+	@LD_LIBRARY_PATH=. PATH=.:$(PATH) bats test
