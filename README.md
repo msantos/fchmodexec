@@ -13,7 +13,7 @@ a command
 any file descriptors inherited from the parent process before executing
 a program.
 
-libdisablefchmod: Disables calls fchmod(2) to stdin and stdout by
+libdisablefchmod: Disables use of fchmod(2) on stdin and stdout by
 dynamically linked executables.
 
 # EXAMPLES
