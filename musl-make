@@ -4,5 +4,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-export CC="musl-gcc -static -Os"
+export CC="musl-gcc"
+export FCHMODEXEC_CFLAGS="-static -Os"
 exec make $@
